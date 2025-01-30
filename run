@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+cd `dirname $0`
+
+# Build the Docker image
+docker build -t sundai-laughter .
+
+# Run the Docker container
+docker run --rm -p 8726:8000 -v "$(pwd)":/app sundai-laughter
