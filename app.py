@@ -33,7 +33,11 @@ try:
         linear_layer_size=128,
         filter_sizes=[128, 64, 32, 32],
     )
-    model.load_state_dict(torch.load(MODEL_CKPT_PATH, map_location='cpu')['state_dict'])
+    from torch.serialization import add_safe_globals
+    add_safe_globals(['numpy.core.multiarray.scalar'])
+    
+    checkpoint = torch.load(MODEL_CKPT_PATH, map_location='cpu', weights_only=False)
+    model.load_state_dict(checkpoint['state_dict'])
     model.to(DEVICE)
     model.eval()
     logger.info("Model loaded successfully.")
