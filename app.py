@@ -12,7 +12,7 @@ app = Flask(__name__)
 # CORS Configuration (allow specific origins in production)
 allowed_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "*").split(",")
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
-
+print(f"Configured origins: {allowed_origins}")  
 
 # Environment Variables for Configuration
 MODEL_CKPT_PATH = os.environ.get("MODEL_CKPT_PATH", './model_checkpoints/best.pth.tar')
@@ -75,4 +75,11 @@ def upload_file():
             os.remove(TEMP_AUDIO_PATH)
             logger.info(f"Temporary file {TEMP_AUDIO_PATH} removed.")
 
+@app.route('/debug-cors')
+def debug_cors():
+    return {
+        'CORS_ALLOWED_ORIGINS': os.environ.get('CORS_ALLOWED_ORIGINS', 'not set'),
+        'parsed_origins': os.environ.get('CORS_ALLOWED_ORIGINS', '*').split(',')
+    }
+    
 # The app is now ready to be served by a WSGI server (e.g., gunicorn, uWSGI).
